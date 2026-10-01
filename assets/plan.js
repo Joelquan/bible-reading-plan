@@ -83,6 +83,23 @@ function formatDay(chapters) {
   }).join(", ");
 }
 
+/* Audio Bible: about 75 hours at a normal narration pace (published KJV
+   recordings range roughly 65 to 85 hours). Reading: about 70 hours at a
+   steady reading pace. Day portions below are estimates from these totals. */
+var AUDIO_TOTAL_MIN = 75 * 60;
+var READ_TOTAL_MIN = 70 * 60;
+
+function buildTimePlan(totalMin, dailyMin, speed) {
+  speed = speed || 1;
+  var contentPerDay = dailyMin * speed;
+  var days = Math.max(1, Math.ceil(totalMin / contentPerDay));
+  var list = canonList();
+  var plan = buildPlan(list, days);
+  return plan.map(function(chapters) {
+    return { chapters: chapters, minutes: dailyMin };
+  });
+}
+
 var PLANS = {
   year: {
     name: "Bible in a Year",
@@ -101,7 +118,21 @@ var PLANS = {
     days: 365,
     blurb: "About 3 chapters a day, with the books arranged in the order their events happened.",
     list: chronoList
+  },
+  audio: {
+    name: "Audio Bible",
+    timeBased: true,
+    totalMin: AUDIO_TOTAL_MIN,
+    unit: "listening",
+    blurb: "About 75 hours of listening in total. Pick how long you listen each day and see your finish date."
+  },
+  readtime: {
+    name: "Reading by Time",
+    timeBased: true,
+    totalMin: READ_TOTAL_MIN,
+    unit: "reading",
+    blurb: "About 70 hours of reading in total. Pick how long you read each day and see your finish date."
   }
 };
 
-if (typeof module !== "undefined") module.exports = { BOOKS: BOOKS, CHRONO_ORDER: CHRONO_ORDER, buildPlan: buildPlan, canonList: canonList, chronoList: chronoList, formatDay: formatDay, PLANS: PLANS };
+if (typeof module !== "undefined") module.exports = { BOOKS: BOOKS, CHRONO_ORDER: CHRONO_ORDER, buildPlan: buildPlan, buildTimePlan: buildTimePlan, canonList: canonList, chronoList: chronoList, formatDay: formatDay, PLANS: PLANS, AUDIO_TOTAL_MIN: AUDIO_TOTAL_MIN, READ_TOTAL_MIN: READ_TOTAL_MIN };

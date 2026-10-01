@@ -42,6 +42,16 @@
       "@type": "Question",
       "name": "Can I print my Bible reading plan?",
       "acceptedAnswer": { "@type": "Answer", "text": "Yes. Build your plan, then tap the Print Plan button for a clean printer-friendly checklist you can tick off by hand." }
+    },
+    {
+      "@type": "Question",
+      "name": "How many hours does it take to listen to the whole Bible on audio?",
+      "acceptedAnswer": { "@type": "Answer", "text": "About 70 to 75 hours at normal speed. At 1.5x speed it takes about 47 to 50 hours, and at 2x speed about 35 to 38 hours." }
+    },
+    {
+      "@type": "Question",
+      "name": "How many hours does it take to read the whole Bible?",
+      "acceptedAnswer": { "@type": "Answer", "text": "About 70 hours at a steady reading pace." }
     }
   ]
 }
@@ -77,6 +87,42 @@
         <strong>Chronological</strong>
         <span>365 days, books in history order</span>
       </button>
+      <button class="plan-card" data-plan="audio" role="radio" aria-checked="false">
+        <strong>Audio Bible</strong>
+        <span>About 75 hours of listening</span>
+      </button>
+      <button class="plan-card" data-plan="readtime" role="radio" aria-checked="false">
+        <strong>Reading by Time</strong>
+        <span>About 70 hours of reading</span>
+      </button>
+    </div>
+
+    <div class="time-picker" id="timePicker" hidden>
+      <p class="time-q">How long will you <span id="timeVerb">listen</span> each day?</p>
+      <div class="speed-row" id="speedRow" hidden>
+        <span class="speed-label">Playback speed</span>
+        <div class="time-presets" id="speedPresets">
+          <button data-speed="1" class="on">1x normal</button>
+          <button data-speed="1.5">1.5x</button>
+          <button data-speed="2">2x</button>
+        </div>
+      </div>
+      <div class="time-presets" id="timePresets">
+        <button data-min="10">10 min</button>
+        <button data-min="15">15 min</button>
+        <button data-min="20">20 min</button>
+        <button data-min="30" class="on">30 min</button>
+        <button data-min="45">45 min</button>
+        <button data-min="60">1 hour</button>
+        <button data-min="90">1.5 hours</button>
+        <button data-min="120">2 hours</button>
+      </div>
+      <div class="time-custom">
+        <label>Hours <input type="number" id="customHours" min="0" max="12" value="0"></label>
+        <label>Minutes <input type="number" id="customMins" min="0" max="59" value="30"></label>
+        <button id="customSet" class="btn btn-small">Set</button>
+      </div>
+      <p class="time-result" id="timeResult"></p>
     </div>
 
     <div class="controls">
@@ -116,6 +162,14 @@
     <details>
       <summary>Can I print my Bible reading plan?</summary>
       <p>Yes. Build your plan above, then tap <strong>Print Plan</strong> for a clean printer-friendly checklist you can tick off by hand.</p>
+    </details>
+    <details>
+      <summary>How many hours does it take to listen to the whole Bible on audio?</summary>
+      <p>About 70 to 75 hours at normal speed. At 1.5x speed it takes about 47 to 50 hours, and at 2x speed about 35 to 38 hours. Use the Audio Bible plan above, pick your daily listening time and playback speed, and it will tell you your finish date.</p>
+    </details>
+    <details>
+      <summary>How many hours does it take to read the whole Bible?</summary>
+      <p>About 70 hours at a steady reading pace. Use the Reading by Time plan above, pick how long you read each day, and it will show how many days it takes and when you finish.</p>
     </details>
   </section>
 </main>
