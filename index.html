@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Bible Reading Plan Generator | Read the KJV Bible in a Year, 90 Days, or Chronologically</title>
+<meta name="description" content="Build your free KJV Bible reading plan in seconds. Choose Bible in a Year, Bible in 90 Days, or Chronological order. Day-by-day schedule with dates, check off your progress, and print it free.">
+<link rel="canonical" href="https://joelquan.github.io/bible-reading-plan/">
+<link rel="stylesheet" href="assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "FreeBiblePlan",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0" },
+  "description": "Free KJV Bible reading plan generator: Bible in a Year, Bible in 90 Days, or Chronological. Printable day-by-day schedule."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How long does it take to read the Bible in a year?",
+      "acceptedAnswer": { "@type": "Answer", "text": "About 3 chapters a day, roughly 15 to 20 minutes of reading. The Bible in a Year plan on this page spreads all 1,189 chapters across 365 days." }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a chronological Bible reading plan?",
+      "acceptedAnswer": { "@type": "Answer", "text": "A chronological plan arranges the books of the Bible in the order their events happened, so you read the story as it unfolded in history rather than in the traditional book order." }
+    },
+    {
+      "@type": "Question",
+      "name": "Which Bible translation does this reading plan use?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The plan follows the King James Version (KJV) chapter structure, which matches the chapter divisions used by almost all English Bible translations." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I print my Bible reading plan?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Build your plan, then tap the Print Plan button for a clean printer-friendly checklist you can tick off by hand." }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <span class="brand-mark">FreeBiblePlan</span>
+      <span class="brand-sub">KJV Reading Plans</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="ad-slot ad-top" aria-hidden="true"><span>Advertisement</span></div>
+
+  <section class="hero card">
+    <h1>Free Bible Reading Plan Generator</h1>
+    <p class="lede">Pick a pace. Get a day-by-day KJV reading schedule with real dates. Check off each day as you read, and print your plan free.</p>
+
+    <div class="plan-picker" role="radiogroup" aria-label="Choose your reading plan">
+      <button class="plan-card selected" data-plan="year" role="radio" aria-checked="true">
+        <strong>Bible in a Year</strong>
+        <span>365 days, about 3 chapters a day</span>
+      </button>
+      <button class="plan-card" data-plan="days90" role="radio" aria-checked="false">
+        <strong>Bible in 90 Days</strong>
+        <span>90 days, about 13 chapters a day</span>
+      </button>
+      <button class="plan-card" data-plan="chrono" role="radio" aria-checked="false">
+        <strong>Chronological</strong>
+        <span>365 days, books in history order</span>
+      </button>
+    </div>
+
+    <div class="controls">
+      <label class="date-label">Start date
+        <input type="date" id="startDate">
+      </label>
+      <button id="printBtn" class="btn">Print Plan</button>
+      <button id="resetBtn" class="btn btn-quiet">Reset checks</button>
+    </div>
+    <p class="plan-blurb" id="planBlurb"></p>
+  </section>
+
+  <section class="card schedule-card">
+    <div class="schedule-head">
+      <h2 id="scheduleTitle">Your reading schedule</h2>
+      <span class="progress" id="progressLabel"></span>
+    </div>
+    <ol class="schedule" id="schedule"></ol>
+  </section>
+
+  <div class="ad-slot ad-mid" aria-hidden="true"><span>Advertisement</span></div>
+
+  <section class="card faq">
+    <h2>Questions</h2>
+    <details open>
+      <summary>How long does it take to read the Bible in a year?</summary>
+      <p>About 3 chapters a day, roughly 15 to 20 minutes of reading. The Bible in a Year plan spreads all 1,189 chapters across 365 days.</p>
+    </details>
+    <details>
+      <summary>What is a chronological Bible reading plan?</summary>
+      <p>It arranges the books of the Bible in the order their events happened, so you read the story as it unfolded in history rather than in the traditional book order. Each book is still read straight through.</p>
+    </details>
+    <details>
+      <summary>Which Bible translation does this plan use?</summary>
+      <p>The plan follows the King James Version (KJV) chapter structure, which matches the chapter divisions used by almost all English Bible translations.</p>
+    </details>
+    <details>
+      <summary>Can I print my Bible reading plan?</summary>
+      <p>Yes. Build your plan above, then tap <strong>Print Plan</strong> for a clean printer-friendly checklist you can tick off by hand.</p>
+    </details>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="ad-slot ad-bottom" aria-hidden="true"><span>Advertisement</span></div>
+    <p>FreeBiblePlan. Read the whole counsel of God. A <a href="https://verseriver.com">Verse River</a> project.</p>
+  </div>
+</footer>
+
+<script src="assets/plan.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

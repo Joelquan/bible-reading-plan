@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://joelquan.github.io/bible-reading-plan/sitemap.xml
