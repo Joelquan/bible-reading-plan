@@ -96,7 +96,9 @@ function buildTimePlan(totalMin, dailyMin, speed) {
   var list = canonList();
   var plan = buildPlan(list, days);
   return plan.map(function(chapters) {
-    return { chapters: chapters, minutes: dailyMin };
+    /* minutes describe the portion's audio length at normal speed,
+       so it scales with playback speed (30 min at 2x ~= 60 min of audio) */
+    return { chapters: chapters, minutes: Math.round(dailyMin * speed) };
   });
 }
 
