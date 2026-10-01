@@ -5,6 +5,8 @@
   var planKey = "year";
   var dailyMin = 30;
   var speed = 1;
+  var viewMode = "calendar";
+  var calCursor = null;
   var scheduleEl = document.getElementById("schedule");
   var startInput = document.getElementById("startDate");
   var blurbEl = document.getElementById("planBlurb");
@@ -13,6 +15,11 @@
   var timePicker = document.getElementById("timePicker");
   var timeVerb = document.getElementById("timeVerb");
   var timeResult = document.getElementById("timeResult");
+  var calWrap = document.getElementById("calWrap");
+  var calNav = document.getElementById("calNav");
+  var calLabel = document.getElementById("calLabel");
+  var viewListBtn = document.getElementById("viewList");
+  var viewCalBtn = document.getElementById("viewCal");
 
   function todayISO() {
     var d = new Date();
@@ -101,12 +108,43 @@
     }
 
     scheduleEl.innerHTML = "";
+    var sig = planKey + "|" + startISO;
+    if (!calCursor || calCursor._sig !== sig) {
+      var sp = startISO.split("-");
+      calCursor = { y: parseInt(sp[0], 10), m: parseInt(sp[1], 10) - 1, _sig: sig };
+    }
+
+    if (viewMode === "calendar") {
+      scheduleEl.hidden = true;
+      calWrap.hidden = false;
+      calNav.hidden = false;
+      renderCalendar(entries, startISO, checks, days, today);
+    } else {
+      scheduleEl.hidden = false;
+      calWrap.hidden = true;
+      calNav.hidden = true;
+      renderList(entries, startISO, checks, days, today);
+    }
+    var doneCount = checks.filter(function(i) { return i < days; }).length;
+    progressEl.textContent = doneCount + " of " + days + " days complete";
+  }
+
+  function onCheck(i, checked, rowEl, days) {
+    var c = readChecks();
+    var at = c.indexOf(i);
+    if (checked && at < 0) c.push(i);
+    if (!checked && at >= 0) c.splice(at, 1);
+    writeChecks(c);
+    if (rowEl) rowEl.classList.toggle("done", checked);
+    progressEl.textContent = c.length + " of " + days + " days complete";
+  }
+
+  function renderList(entries, startISO, checks, days, today) {
+    scheduleEl.innerHTML = "";
     var frag = document.createDocumentFragment();
-    var done = 0;
     entries.forEach(function(entry, i) {
       var dt = fmtDate(startISO, i);
       var isDone = checks.indexOf(i) >= 0;
-      if (isDone) done++;
       var li = document.createElement("li");
       li.className = "day" + (dt.iso === today ? " today" : "") + (isDone ? " done" : "");
 
@@ -115,13 +153,7 @@
       box.checked = isDone;
       box.setAttribute("aria-label", "Mark day " + (i + 1) + " complete");
       box.addEventListener("change", function() {
-        var c = readChecks();
-        var at = c.indexOf(i);
-        if (box.checked && at < 0) c.push(i);
-        if (!box.checked && at >= 0) c.splice(at, 1);
-        writeChecks(c);
-        li.classList.toggle("done", box.checked);
-        progressEl.textContent = c.length + " of " + days + " days complete";
+        onCheck(i, box.checked, li, days);
       });
 
       var meta = document.createElement("div");
@@ -146,7 +178,82 @@
       frag.appendChild(li);
     });
     scheduleEl.appendChild(frag);
-    progressEl.textContent = done + " of " + days + " days complete";
+  }
+
+  var MONTHS = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+  var DOWS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  function isoToDate(iso) {
+    var p = iso.split("-");
+    return new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+  }
+  function dateToISO(d) {
+    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  }
+
+  function renderCalendar(entries, startISO, checks, days, today) {
+    var start = isoToDate(startISO);
+    calLabel.textContent = MONTHS[calCursor.m] + " " + calCursor.y;
+    calWrap.innerHTML = "";
+    var grid = document.createElement("div");
+    grid.className = "cal-grid";
+    DOWS.forEach(function(d) {
+      var h = document.createElement("div");
+      h.className = "cal-dow";
+      h.textContent = d;
+      grid.appendChild(h);
+    });
+    var lead = new Date(calCursor.y, calCursor.m, 1).getDay();
+    var dim = new Date(calCursor.y, calCursor.m + 1, 0).getDate();
+    for (var b = 0; b < lead; b++) {
+      var blank = document.createElement("div");
+      blank.className = "cal-day out";
+      grid.appendChild(blank);
+    }
+    for (var dnum = 1; dnum <= dim; dnum++) {
+      (function(dnum) {
+        var cellDate = new Date(calCursor.y, calCursor.m, dnum);
+        var idx = Math.round((cellDate - start) / 86400000);
+        var cell = document.createElement("div");
+        var iso = dateToISO(cellDate);
+        var num = document.createElement("span");
+        num.className = "cal-num";
+        num.textContent = dnum;
+        if (idx >= 0 && idx < days) {
+          var entry = entries[idx];
+          var isDone = checks.indexOf(idx) >= 0;
+          cell.className = "cal-day in-plan" + (iso === today ? " today" : "") + (isDone ? " done" : "");
+          var top = document.createElement("div");
+          top.className = "cal-top";
+          var box = document.createElement("input");
+          box.type = "checkbox";
+          box.checked = isDone;
+          box.setAttribute("aria-label", "Mark day " + (idx + 1) + " complete");
+          box.addEventListener("change", function() {
+            onCheck(idx, box.checked, cell, days);
+          });
+          top.appendChild(num);
+          top.appendChild(box);
+          cell.appendChild(top);
+          var ch = document.createElement("div");
+          ch.className = "cal-chapters";
+          ch.textContent = "Day " + (idx + 1) + ": " + formatDay(entry.chapters);
+          cell.appendChild(ch);
+          if (entry.minutes != null) {
+            var mn = document.createElement("div");
+            mn.className = "cal-min";
+            mn.textContent = "\u2248" + entry.minutes + " min";
+            cell.appendChild(mn);
+          }
+        } else {
+          cell.className = "cal-day out";
+          cell.appendChild(num);
+        }
+        grid.appendChild(cell);
+      })(dnum);
+    }
+    calWrap.appendChild(grid);
   }
 
   document.querySelectorAll(".plan-card").forEach(function(card) {
@@ -197,6 +304,26 @@
 
   startInput.value = todayISO();
   startInput.addEventListener("change", render);
+
+  function setView(v) {
+    viewMode = v;
+    viewListBtn.classList.toggle("on", v === "list");
+    viewCalBtn.classList.toggle("on", v === "calendar");
+    render();
+  }
+  viewListBtn.addEventListener("click", function() { setView("list"); });
+  viewCalBtn.addEventListener("click", function() { setView("calendar"); });
+
+  document.getElementById("calPrev").addEventListener("click", function() {
+    calCursor.m--;
+    if (calCursor.m < 0) { calCursor.m = 11; calCursor.y--; }
+    render();
+  });
+  document.getElementById("calNext").addEventListener("click", function() {
+    calCursor.m++;
+    if (calCursor.m > 11) { calCursor.m = 0; calCursor.y++; }
+    render();
+  });
 
   document.getElementById("printBtn").addEventListener("click", function() {
     window.print();
