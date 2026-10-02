@@ -169,8 +169,17 @@
 
       var reading = document.createElement("span");
       reading.className = "day-reading";
-      reading.textContent = (entry.minutes != null ? "\u2248" + entry.minutes + " min \u00B7 " : "") +
-        formatDay(entry.chapters);
+      if (entry.minutes != null) {
+        reading.appendChild(document.createTextNode("\u2248" + entry.minutes + " min \u00B7 "));
+      }
+      /* keep each "Book 1-3" part on one line so ranges never split after the hyphen */
+      formatDay(entry.chapters).split(", ").forEach(function(part, j) {
+        if (j > 0) reading.appendChild(document.createTextNode(", "));
+        var s = document.createElement("span");
+        s.style.whiteSpace = "nowrap";
+        s.textContent = part;
+        reading.appendChild(s);
+      });
 
       li.appendChild(box);
       li.appendChild(meta);

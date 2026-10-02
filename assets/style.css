@@ -149,6 +149,8 @@ body {
 @media (max-width: 640px) {
   .hero h1 { font-size: 23px; }
   .day-meta { min-width: 0; flex-direction: column; gap: 0; }
+  .brand-mark { font-size: 20px; letter-spacing: 2px; }
+  .brand-sub { display: block; margin: 4px 0 0; font-size: 12px; }
 }
 
 .time-picker {
