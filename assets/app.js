@@ -7,6 +7,12 @@
   var speed = 1;
   var viewMode = "calendar";
   var calCursor = null;
+  var MODES = {
+    reading: ["year", "days90", "chrono", "readtime"],
+    listening: ["audio"]
+  };
+  var modeKey = "reading";
+  var lastPlan = { reading: "year", listening: "audio" };
   var scheduleEl = document.getElementById("schedule");
   var startInput = document.getElementById("startDate");
   var blurbEl = document.getElementById("planBlurb");
@@ -20,6 +26,9 @@
   var calLabel = document.getElementById("calLabel");
   var viewListBtn = document.getElementById("viewList");
   var viewCalBtn = document.getElementById("viewCal");
+  var heroCard = document.getElementById("heroCard");
+  var modeReadingBtn = document.getElementById("modeReading");
+  var modeListeningBtn = document.getElementById("modeListening");
 
   function todayISO() {
     var d = new Date();
@@ -265,18 +274,39 @@
     calWrap.appendChild(grid);
   }
 
+  function applyPlanSelection() {
+    document.querySelectorAll(".plan-card").forEach(function(c) {
+      var on = c.getAttribute("data-plan") === planKey;
+      c.classList.toggle("selected", on);
+      c.setAttribute("aria-checked", on ? "true" : "false");
+    });
+  }
+
+  function setMode(m) {
+    modeKey = m;
+    modeReadingBtn.classList.toggle("on", m === "reading");
+    modeListeningBtn.classList.toggle("on", m === "listening");
+    heroCard.classList.toggle("mode-reading", m === "reading");
+    heroCard.classList.toggle("mode-listening", m === "listening");
+    document.querySelectorAll(".plan-card").forEach(function(card) {
+      card.style.display = MODES[m].indexOf(card.getAttribute("data-plan")) >= 0 ? "" : "none";
+    });
+    planKey = lastPlan[m] || MODES[m][0];
+    applyPlanSelection();
+    render();
+  }
+
   document.querySelectorAll(".plan-card").forEach(function(card) {
     card.addEventListener("click", function() {
-      document.querySelectorAll(".plan-card").forEach(function(c) {
-        c.classList.remove("selected");
-        c.setAttribute("aria-checked", "false");
-      });
-      card.classList.add("selected");
-      card.setAttribute("aria-checked", "true");
       planKey = card.getAttribute("data-plan");
+      lastPlan[modeKey] = planKey;
+      applyPlanSelection();
       render();
     });
   });
+
+  modeReadingBtn.addEventListener("click", function() { setMode("reading"); });
+  modeListeningBtn.addEventListener("click", function() { setMode("listening"); });
 
   document.querySelectorAll("#speedPresets button").forEach(function(btn) {
     btn.addEventListener("click", function() {
@@ -343,5 +373,5 @@
     render();
   });
 
-  render();
+  setMode("reading");
 })();
